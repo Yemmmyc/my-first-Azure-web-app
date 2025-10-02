@@ -1,70 +1,208 @@
-# Getting Started with Create React App
+README.md
+# MyApp - React + Azure Static Web App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a **React** project deployed as an **Azure Static Web App** using **GitHub Actions** for CI/CD. Every push to the `main` branch automatically builds and deploys the app.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## Table of Contents
 
-### `npm start`
+1. [Project Structure](#project-structure)
+2. [Getting Started](#getting-started)
+3. [Build & Run Locally](#build--run-locally)
+4. [GitHub Actions Deployment](#github-actions-deployment)
+5. [Azure Static Web App Deployment](#azure-static-web-app-deployment)
+6. [License](#license)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Project Structure
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+myapp/
+├─ build/ # Build output (generated)
+├─ node_modules/
+├─ public/
+├─ src/
+├─ package.json
+├─ package-lock.json
+├─ .gitignore
+└─ .github/workflows/
+└─ azure-static-web-app.yml # GitHub Actions workflow
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Getting Started
 
-### `npm run eject`
+### Prerequisites
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- Node.js v20.x
+- npm v10.x
+- Git
+- Azure account
+- GitHub account
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Clone repository
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+git clone https://github.com/<your-username>/myapp.git
+cd myapp
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Build & Run Locally
 
-## Learn More
+Install dependencies:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+npm install
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
+Run the development server:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+npm start
 
-### Analyzing the Bundle Size
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Open your browser:
 
-### Making a Progressive Web App
+http://localhost:3000
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-### Advanced Configuration
+Create production build:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+npm run build
 
-### Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+The optimized build will be in the build/ folder.
 
-### `npm run build` fails to minify
+GitHub Actions Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project uses GitHub Actions to automate deployment to Azure Static Web Apps:
+
+Workflow file: .github/workflows/azure-static-web-app.yml
+
+Trigger: Push to main branch
+
+Steps:
+
+Checkout repo
+
+Set up Node.js environment
+
+Install dependencies
+
+Build React app
+
+Deploy build/ folder to Azure Static Web App
+
+Deployment Token
+
+Create a secret in GitHub: AZURE_STATIC_WEB_APPS_API_TOKEN
+
+Get the token from Azure Portal → Your Static Web App → Deployment Center → GitHub Actions → Generate token
+
+Azure Static Web App Deployment
+
+Create a Static Web App in Azure.
+
+Choose GitHub as the source.
+
+Set Build Configuration:
+
+App location: /
+
+Output location: build
+
+The app will deploy automatically via GitHub Actions.
+
+Visit the Azure-provided URL to see your live app.
+
+License
+
+This project is licensed under the MIT License.
+
+
+---
+
+# Step-by-Step Deployment Guide
+
+### 1️⃣ Set up the React project
+
+```bash
+npx create-react-app myapp
+cd myapp
+
+
+Add your app code.
+
+Test locally with npm start.
+
+2️⃣ Build for production
+npm run build
+
+
+This generates the build/ folder ready for deployment.
+
+3️⃣ Create GitHub repository
+
+Push your code to GitHub:
+
+git init
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git remote add origin https://github.com/<username>/myapp.git
+git push -u origin main
+
+4️⃣ Configure GitHub Actions for deployment
+
+Create folder: .github/workflows/
+
+Add file: azure-static-web-app.yml
+
+Paste workflow:
+
+name: Azure Static Web App CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+    - run: npm install
+    - run: npm run build
+    - uses: Azure/static-web-apps-deploy@v1
+      with:
+        azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        action: "upload"
+        app_location: "/"
+        output_location: "build"
+
+5️⃣ Get deployment token
+
+Azure Portal → Your Static Web App → Deployment Center → GitHub Actions → Generate token
+
+Add it as secret AZURE_STATIC_WEB_APPS_API_TOKEN in GitHub repo.
+
+6️⃣ Commit workflow
+git add .github/workflows/azure-static-web-app.yml
+git commit -m "Add GitHub Actions workflow"
+git push origin main
+
+7️⃣ Verify deployment
+
+GitHub Actions will run automatically.
+
+Azure Static Web App will deploy build/.
+
+Visit the URL provided by Azure to see your live app.
+
+This README.md and guide fully document the process, both for running locally and deploying automatically.
